@@ -414,4 +414,4 @@ After analysis the dataset of the Titanic passengers, we have found out:
 * Adult passengers in the first and second classes have higher survival rate.
   * This trend was also shown in the correlation of fare paid and survival rate. People in the more premium cabin pay more fare.
 * Passengers travel with their families (Spouse, Sibling, Parents, Children) have slight higher survival rate than people travel alone.
-* Male passengers from the second class have the lowest survival rate of all types of passengers.ter
+* Male passengers from the second class have the lowest survival rate of all types of passengers.
