@@ -1,19 +1,12 @@
 # Titanic Passenger Analysis
 
+Date: Aug 24, 2021
+
 Case Study by ***Keqi Deng***
 Guided by Jose Portilla of [Pierian Data Inc.](https://courses.pieriandata.com/bundles/zero-to-data-hero)
 
 ## About the data
 The data used in this case study is from kaggle: [Titanic - Machine Learning from Disaster](https://www.kaggle.com/c/titanic).
-
-The following python packages are imported for this project:
-```python
-import pandas as pd
-from pandas import Series, DataFrame
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-```
 
 ## Set Goal for the Analysis Outcome
 * Identify the demographic of the Titanic passengers
@@ -24,6 +17,16 @@ import seaborn as sns
 * The features of the passengers who survived the sinking
 
 ## Understand the Dataset
+
+The following python packages are imported for this project:
+```python
+import pandas as pd
+from pandas import Series, DataFrame
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
 Using the following command in python to understand the general information of the dataset:
 
 ```python
