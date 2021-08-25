@@ -86,4 +86,31 @@ Distribution of the Year been Installed
 
 Notice that the installation of the pipes are between 1920 and 2000. There are peaks of pipe installation at the beginning of the decades.
 
-###
+### Material
+Since the material attribute is categorical, different chart is used for the analysis of material types. Since the material used are only in ```plastic``` and ```stell```, we can use ```seaborn.countplot``` to analysis its feature.
+
+A function is made here for ease future plotting.
+```python
+def cot_easyPlot (attribute):
+    fig = sns.countplot(x = attribute, data = edmt_gas_df, palette = 'bone')
+    plt.title(f'{attribute} count plot')
+    plt.grid(axis = 'y')
+    plt.show()
+```
+Plot for the material attribute:
+```python
+cot_easyPlot('material')
+```
+Material Count Chart
+![material count chart](material_cotplt)
+
+Notice that there are slight more steel made pipe than plastic made pipe.
+
+### Activity Zone
+Use the previous function for easier plot.
+```python
+cot_easyPlot('activity_zone')
+```
+Activity Zone Count Plot
+![activity zone count plot](activityZone_cotplt)
+
