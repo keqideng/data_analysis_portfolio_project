@@ -13,8 +13,11 @@ The data used in this case study is from kaggle: [Titanic - Machine Learning fro
   * General demographic identifiers: *Gender*, *Age*
   * Embarked Location
   * Companion information: *Sibling and Spouse*, *Parents and Children*
-* Identify the correlation of Passenger's deck and the class
 * The features of the passengers who survived the sinking
+    * Age
+    * Groups of people (Male, Female, Child)
+    * Passenger Class
+    * Fare paid
 
 ## Understand the Dataset
 
