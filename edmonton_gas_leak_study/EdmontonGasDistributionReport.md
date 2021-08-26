@@ -1,6 +1,7 @@
+[Back](https://keqideng.github.io/data_analysis_portfolio_project/)
 # Edmonton Gas Distribution Analysis
-
 Date: Aug 25, 2021
+
 Case Study by ***Keqi Deng***
 Data Provided by __*Daryl Bandstra*__ of [***Integral Engineering***](https://www.integraleng.ca)
 **Sample Data for Study Purpose Only**
@@ -19,6 +20,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import geopandas as gpd
+import contextily as cx
 ```
 
 Import the dataset:
