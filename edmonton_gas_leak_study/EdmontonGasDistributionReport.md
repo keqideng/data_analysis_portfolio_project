@@ -245,9 +245,7 @@ Since there are 10 sections experienced leakage in both 2019 and 2020. It is ver
 
 For the rest of the sections, use pivot table to help us decide:
 ```python
-edmt_piv = pd.pivot_table(data = edmt_gas_df, values = ['leaked_num','length_m'],
-                          index = ['install_year','material','activity_zone','diameter','pressure'],
-                          aggfunc = {'leaked_num': np.mean, 'length_m': np.sum})```
+edmt_piv = pd.pivot_table(data = edmt_gas_df, values = ['leaked_num','length_m'], index = ['install_year','material','activity_zone','diameter','pressure'], aggfunc = {'leaked_num': np.mean, 'length_m': np.sum})
 ```
 We get the result:
 ```
