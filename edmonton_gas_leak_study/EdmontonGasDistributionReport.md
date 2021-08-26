@@ -7,9 +7,6 @@ Data Provided by __*Daryl Bandstra*__ of [***Integral Engineering***](https://ww
 The dataset used in this case study is the intellectual property of [***Integral Engineering***](https://www.integraleng.ca). Daryl Bandstra authorized keqi Deng to use the dataset for analytical study only. All other usages of this dataset are not permitted.
 
 
-## Project Description
-
-
 ## Analysis Objective
 * Select 100 km's from the pipeline network for replacement in order to achieve the most leak reduction
 * Plot the GIS information on the map
