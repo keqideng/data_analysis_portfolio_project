@@ -168,7 +168,7 @@ Name: leaked, dtype: int64
 ```
 Plot pie chart for visualization:
 ```python
-plt.pie(pd.value_counts(edmt_gas_df['leaked']), labels = ['Not Leaked', 'Leaked'], autopct='%.1ff%%')
+plt.pie(pd.value_counts(edmt_gas_df['leaked']), labels = ['Not Leaked', 'Leaked'], autopct='%.2f%%')
 plt.title('Leakage Percentage of 2019 and 2020')
 ```
 Leakage Percentage of 2019 and 2020
