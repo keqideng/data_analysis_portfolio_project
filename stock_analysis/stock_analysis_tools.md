@@ -1,6 +1,6 @@
 [Back](https://keqideng.github.io/data_analysis_portfolio_project/)
 # Stock Market Analysis
-Date: Aug 27, 2021
+Date: Aug 30, 2021
 
 Prepared by ***Keqi Deng***
 Guided by Jose Portilla of [Pierian Data Inc.](https://courses.pieriandata.com/bundles/zero-to-data-hero)
@@ -91,3 +91,70 @@ BRK-B, GOOG, TQQQ, AMC and Dow Jones Industrial Average Daily Change Rate Differ
 
 BRK-B, GOOG, TQQQ, AMC and Nasdaq Daily Change Rate Difference for the last 3 Years
 ![BRK-B, GOOG, TQQQ, AMC and Nasdaq Daily Change Rate Difference for the last 3 Years](brk_goog_tqqq_amc_3_nasdaq)
+
+# Project Update
+Date: Aug 31, 2021
+
+There are several improvements has been implemented to make the function more universally adaptable. Now the tickers entered does not limited to four. It could handle less and more tickers for comparison. The charts are also added into one chart to be more straightforward.
+
+The updated code:
+```python
+def stock_anaysis(tick_list, year):
+    end = datetime.now()
+    start = datetime(end.year - year,end.month,end.day)
+    tick_rate_df = web.DataReader(tick_list,'yahoo',start,end)['Adj Close'].pct_change()
+    indexes = web.DataReader(['^GSPC','^DJI','^IXIC'], 'yahoo', start, end)['Adj Close'].pct_change()
+    
+    #Function added to handle multiple ticker entries, not limited to 4
+    SNP = rate_difference_df(index = indexes['^GSPC'], tickers = tick_rate_df)*100
+    SNP.name = 'S&P 500'
+    DOW = rate_difference_df(index= indexes['^DJI'], tickers = tick_rate_df)*100
+    DOW.name = 'Dow Jones Industrial Average'
+    Nasdaq = rate_difference_df(index = indexes['^IXIC'], tickers = tick_rate_df)*100
+    Nasdaq.name = 'Nasdaq'
+    
+    #Muster subplots into one plot to simplify comparison 
+    f = plt.figure(figsize=(10,30))
+    f.add_subplot(311)
+    draw_a_plot(SNP)
+    f.add_subplot(312)
+    draw_a_plot(DOW)
+    f.add_subplot(313)
+    draw_a_plot(Nasdaq)
+
+    plt.show()
+
+def draw_a_plot (tick):
+    area = np.pi*10
+    plt.scatter(tick.mean(), tick.std(),alpha = 0.5,s =area)
+    plt.ylim([0,5])
+    plt.xlim([-0.5,0.5])
+    plt.title(f'Expected Daily Return Ratio minus {tick.name}')
+    plt.xlabel(f'Average Daily Return minus {tick.name}/%')
+    plt.ylabel('Risk Level (Standard Deviation)')
+    plt.axvline(x=0, linewidth=4, color='g')
+
+    for label, x, y in zip(tick.columns, tick.mean(), tick.std()):
+        plt.annotate(
+            f'{label}',
+            xy = (x, y), xytext = (50, 50),
+            textcoords = 'offset points', ha = 'left', va = 'bottom',
+            arrowprops = dict(arrowstyle = '-', connectionstyle = 'angle,angleA=-90,angleB=180,rad=5'))
+    plt.grid()
+
+#New function help manage multiple ticker entries
+def rate_difference_df (index, tickers):
+    rate_diff_df = tickers.copy(deep = True)
+    for j in tickers.columns:
+        rate_diff_df[j] = tickers[j] - index
+    rate_diff_df = rate_diff_df.dropna()
+    return rate_diff_df
+```
+
+Use the above method, input command:
+```python
+stock_anaysis(['AAPL','GOOG','BRK-B','ATD-B.TO','BCE.TO','VOOG'], year = 2)
+```
+
+We can get the following result:
+![Stock Compare AAPL, GOOG, BRK-B, ATD-B, BCE, VOOG](tol_compare_6_tickers)

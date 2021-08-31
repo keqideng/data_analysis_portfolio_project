@@ -9,27 +9,28 @@ def stock_anaysis(tick_list, year):
     tick_rate_df = web.DataReader(tick_list,'yahoo',start,end)['Adj Close'].pct_change()
     indexes = web.DataReader(['^GSPC','^DJI','^IXIC'], 'yahoo', start, end)['Adj Close'].pct_change()
 
-    for j in tick_rate_df.columns:
-        for i in indexes.columns:
-            tick_rate_df[f'{j}    {i}'] = tick_rate_df[j] - indexes[i]
-    tick_rate_df = tick_rate_df.dropna()
-
-    SNP = tick_rate_df[[f'{tick_list[0]}    ^GSPC',f'{tick_list[1]}    ^GSPC',f'{tick_list[2]}    ^GSPC',f'{tick_list[3]}    ^GSPC']]*100
+    SNP = rate_difference_df(index = indexes['^GSPC'], tickers = tick_rate_df)*100
     SNP.name = 'S&P 500'
-    DOW = tick_rate_df[[f'{tick_list[0]}    ^DJI',f'{tick_list[1]}    ^DJI',f'{tick_list[2]}    ^DJI',f'{tick_list[3]}    ^DJI']]*100
+    DOW = rate_difference_df(index= indexes['^DJI'], tickers = tick_rate_df)*100
     DOW.name = 'Dow Jones Industrial Average'
-    Nasdaq = tick_rate_df[[f'{tick_list[0]}    ^IXIC',f'{tick_list[1]}    ^IXIC',f'{tick_list[2]}    ^IXIC',f'{tick_list[3]}    ^IXIC']]*100
+    Nasdaq = rate_difference_df(index = indexes['^IXIC'], tickers = tick_rate_df)*100
     Nasdaq.name = 'Nasdaq'
 
+    f = plt.figure(figsize=(10,30))
+    f.add_subplot(311)
     draw_a_plot(SNP)
+    f.add_subplot(312)
     draw_a_plot(DOW)
+    f.add_subplot(313)
     draw_a_plot(Nasdaq)
 
+    plt.show()
+
 def draw_a_plot (tick):
-    area = np.pi*20
+    area = np.pi*10
     plt.scatter(tick.mean(), tick.std(),alpha = 0.5,s =area)
-    #plt.ylim([0,5])
-    #plt.xlim([-0.5,0.5])
+    plt.ylim([0,5])
+    plt.xlim([-0.5,0.5])
     plt.title(f'Expected Daily Return Ratio minus {tick.name}')
     plt.xlabel(f'Average Daily Return minus {tick.name}/%')
     plt.ylabel('Risk Level (Standard Deviation)')
@@ -37,11 +38,17 @@ def draw_a_plot (tick):
 
     for label, x, y in zip(tick.columns, tick.mean(), tick.std()):
         plt.annotate(
-            label[:6],
-            xy = (x, y), xytext = (15, 25),
+            f'{label}',
+            xy = (x, y), xytext = (50, 50),
             textcoords = 'offset points', ha = 'left', va = 'bottom',
             arrowprops = dict(arrowstyle = '-', connectionstyle = 'angle,angleA=-90,angleB=180,rad=5'))
     plt.grid()
-    plt.show()
 
-stock_anaysis(['GOOG','TQQQ','BRK-B','AMC'], year = 3)
+def rate_difference_df (index, tickers):
+    rate_diff_df = tickers.copy(deep = True)
+    for j in tickers.columns:
+        rate_diff_df[j] = tickers[j] - index
+    rate_diff_df = rate_diff_df.dropna()
+    return rate_diff_df
+
+stock_anaysis(['AAPL','GOOG','BRK-B','ATD-B.TO','BCE.TO','VOOG'], year = 2)
