@@ -7,7 +7,7 @@ Phone: 647-514-4114
 # Index
 #### [Simple Stock Market Analysis](stock_analysis/stock_analysis_tools.html)
 [Date: 2021-08-31]
-* pandas, pandas-DataReader, datetime, matplotlib
+* pandas, pandas-DataReader, datetime, matplotlib, seaborn.heatmap
 
 #### [Edmonton Pipeline Replacement Project](edmonton_gas_leak_study/edmonton_gasline_replacement_project.html)
 [Date: 2021-08-25]
