@@ -1,11 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 import pandas_datareader.data as web
 from datetime import datetime
+import seaborn as sns
 
-def stock_anaysis(tick_list, year):
-    end = datetime.now()
-    start = datetime(end.year - year,end.month,end.day)
+def stock_anaysis(tick_list, yr_len, end = datetime.now()):
+    start = datetime(end.year - yr_len,end.month,end.day)
     tick_rate_df = web.DataReader(tick_list,'yahoo',start,end)['Adj Close'].pct_change()
     indexes = web.DataReader(['^GSPC','^DJI','^IXIC'], 'yahoo', start, end)['Adj Close'].pct_change()
 
@@ -23,7 +24,6 @@ def stock_anaysis(tick_list, year):
     draw_a_plot(DOW)
     f.add_subplot(313)
     draw_a_plot(Nasdaq)
-
     plt.show()
 
 def draw_a_plot (tick):
@@ -51,4 +51,24 @@ def rate_difference_df (index, tickers):
     rate_diff_df = rate_diff_df.dropna()
     return rate_diff_df
 
-stock_anaysis(['AAPL','GOOG','BRK-B','ATD-B.TO','BCE.TO','VOOG'], year = 2)
+def annual_analysis(ticker, yearlen = 10, end = datetime.now(), with_number = False):
+    sns.set_style('whitegrid')
+    start = datetime(end.year - yearlen,1,1)
+    tick_rate = web.DataReader(ticker,'yahoo',start,end)['Adj Close'].pct_change()
+    snp = web.DataReader('^GSPC', 'yahoo', start, end)['Adj Close'].pct_change()
+    tick_diff = (tick_rate-snp)*100
+    tick_diff = tick_rate.dropna()
+    tick_diff_df = pd.DataFrame(tick_diff)
+    tick_diff_df['date'] = tick_diff_df.index
+    tick_diff_df['year'] = tick_diff_df.date.dt.year
+    tick_diff_df['month'] = tick_diff_df.date.dt.month
+
+    sns.set_theme()
+    piv_tick = tick_diff_df.pivot_table(index='month', columns='year', values='Adj Close',aggfunc=np.sum)
+    piv_tick = piv_tick.round(decimals=2)
+    f, ax = plt.subplots(figsize=(12, 10))
+    plt.title(f'{ticker} - S&P 500 Monthly Change Rate for {yearlen} Years')
+    sns.heatmap(piv_tick, annot=with_number, linewidths=.5, ax=ax, cmap='RdYlGn')
+    plt.show()
+
+annual_analysis('AAPL', with_number=True)

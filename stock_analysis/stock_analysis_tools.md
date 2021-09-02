@@ -93,15 +93,15 @@ BRK-B, GOOG, TQQQ, AMC and Nasdaq Daily Change Rate Difference for the last 3 Ye
 ![BRK-B, GOOG, TQQQ, AMC and Nasdaq Daily Change Rate Difference for the last 3 Years](brk_goog_tqqq_amc_3_nasdaq)
 
 # Project Update
-Date: Aug 31, 2021
+Date: Sept 1, 2021
 
+## Improve Adaptability
 There are several improvements has been implemented to make the function more universally adaptable. Now the tickers entered does not limited to four. It could handle less and more tickers for comparison. The charts are also added into one chart to be more straightforward.
 
 The updated code:
 ```python
-def stock_anaysis(tick_list, year):
-    end = datetime.now()
-    start = datetime(end.year - year,end.month,end.day)
+def stock_anaysis(tick_list, yr_len, end = datetime.now()):
+    start = datetime(end.year - yr_len,end.month,end.day)
     tick_rate_df = web.DataReader(tick_list,'yahoo',start,end)['Adj Close'].pct_change()
     indexes = web.DataReader(['^GSPC','^DJI','^IXIC'], 'yahoo', start, end)['Adj Close'].pct_change()
     
@@ -158,3 +158,37 @@ stock_anaysis(['AAPL','GOOG','BRK-B','ATD-B.TO','BCE.TO','VOOG'], year = 2)
 
 We can get the following result:
 ![Stock Compare AAPL, GOOG, BRK-B, ATD-B, BCE, VOOG](tol_compare_6_tickers)
+
+## Year-Month Change Rate Chart with Heatmap
+We can also use a heatmap to generate previous monthly data to find out for each stock which months of the year are generally doing better than the general market.
+
+```pandas.pivoit_talbe``` and ```seaborn.heatmap``` are used to produce this result. The change data is calculated against the S&P 500 market daily change rate. The code is as follows:
+
+```python
+def annual_analysis(ticker, yearlen = 10, end = datetime.now(), with_number = False):
+    sns.set_style('whitegrid')
+    start = datetime(end.year - yearlen,1,1)
+    tick_rate = web.DataReader(ticker,'yahoo',start,end)['Adj Close'].pct_change()
+    snp = web.DataReader('^GSPC', 'yahoo', start, end)['Adj Close'].pct_change()
+    tick_diff = (tick_rate-snp)*100
+    tick_diff = tick_rate.dropna()
+    tick_diff_df = pd.DataFrame(tick_diff)
+    tick_diff_df['date'] = tick_diff_df.index
+    tick_diff_df['year'] = tick_diff_df.date.dt.year
+    tick_diff_df['month'] = tick_diff_df.date.dt.month
+
+    sns.set_theme()
+    piv_tick = tick_diff_df.pivot_table(index='month', columns='year', values='Adj Close',aggfunc=np.sum)
+    piv_tick = piv_tick.round(decimals=2)
+    f, ax = plt.subplots(figsize=(12, 10))
+    plt.title(f'{ticker} - S&P 500 Monthly Change Rate for {yearlen} Years')
+    sns.heatmap(piv_tick, annot=with_number, linewidths=.5, ax=ax, cmap='RdYlGn')
+    plt.show()
+```
+
+Use the following command to analysis apple stock's change for the past 10 years.
+```python
+annual_analysis('AAPL', with_number=True)
+```
+The following picture is the heatmap result:
+![apple for the past 10 years monthly](aapl_monthly_10year_heatmap)
