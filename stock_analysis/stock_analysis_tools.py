@@ -71,4 +71,4 @@ def annual_analysis(ticker, yearlen = 10, end = datetime.now(), with_number = Fa
     sns.heatmap(piv_tick, annot=with_number, linewidths=.5, ax=ax, cmap='RdYlGn')
     plt.show()
 
-annual_analysis('AAPL', with_number=True)
+annual_analysis('GOOG', with_number=True)
