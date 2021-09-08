@@ -5,8 +5,12 @@ Email: keqi.deng@outlook.com
 Phone: 647-514-4114
 
 # Index
-#### [Simple Stock Market Analysis](stock_analysis/stock_analysis_tools.html)
-[Date: 2021-08-31]
+#### [Ontario Covid-19 Case Study](ontario_covid_analysis/ontario_covid_analysis.html) 
+[Date: 2021-09-08]      *In Progress...*
+* Requests, IO, pandas, seaborn.lineplot, seaborn.FacetGrid, datetime
+
+#### [Simple Stock Market Analysis](stock_analysis/stock_analysis_tools.html) 
+[Date: 2021-08-31]      *In Progress...*
 * pandas, pandas-DataReader, datetime, matplotlib, seaborn.heatmap
 
 #### [Edmonton Pipeline Replacement Project](edmonton_gas_leak_study/edmonton_gasline_replacement_project.html)
