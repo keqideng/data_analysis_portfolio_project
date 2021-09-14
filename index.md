@@ -6,7 +6,7 @@ Phone: 647-514-4114
 
 # Index
 #### [Ontario Covid-19 Case Study](ontario_covid_analysis/ontario_covid_analysis.html) 
-[Date: 2021-09-08]      *In Progress...*
+[Date: 2021-09-14]      *In Progress...*
 * Requests, IO, pandas, seaborn.lineplot, seaborn.FacetGrid, datetime
 
 #### [Simple Stock Market Analysis](stock_analysis/stock_analysis_tools.html) 
