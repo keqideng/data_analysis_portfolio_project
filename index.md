@@ -5,6 +5,10 @@ Email: keqi.deng@outlook.com
 Phone: 647-514-4114
 
 # Index
+#### [Chinese Eateries in U.S. Analysis](chinese_restaurant_analysis/chinese_restaurant_analysis.html)
+[Date: 2021-09-23]      *In Progress...*
+* pandas, json
+
 #### [Ontario Covid-19 Case Study](ontario_covid_analysis/ontario_covid_analysis.html) 
 [Date: 2021-09-23]
 * Requests, IO, pandas, seaborn.lineplot, seaborn.FacetGrid, datetime
