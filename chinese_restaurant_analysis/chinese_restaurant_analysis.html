@@ -13972,16 +13972,16 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><a href="https://keqideng.github.io/data_analysis_portfolio_project/">Back</a></p>
-<h1 id="Chinese-Eateries-Analysis-in-U.S.">Chinese Eateries Analysis in U.S.<a class="anchor-link" href="#Chinese-Eateries-Analysis-in-U.S.">&#182;</a></h1><p>Date: Sept 23, 2021
+<h1 id="Chinese-Eateries-Analysis">Chinese Eateries Analysis<a class="anchor-link" href="#Chinese-Eateries-Analysis">&#182;</a></h1><p>Date: Sept 27, 2021
 Prepared by <strong><em>Keqi Deng</em></strong></p>
-<blockquote><p>This dataset is a subset of Yelp’s businesses, reviews, and user data. It was originally put together for the Yelp Dataset Challenge which is a chance for students to conduct research or analysis on Yelp’s data and share their discoveries. In the dataset you’ll find information about businesses across 11 metropolitan areas in four countries.</p>
+<blockquote><p>This dataset is made available by <a href="https://www.yelp.com/developers">Yelp Fusion AIP</a>, the usage of the dataset is subject to the terms and conditions of Yelp.</p>
 </blockquote>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[89]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[191]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">gc</span> <span class="c1"># garbage collector</span>
@@ -14059,29 +14059,37 @@ Prepared by <strong><em>Keqi Deng</em></strong></p>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Data-Source">Data Source<a class="anchor-link" href="#Data-Source">&#182;</a></h2><p>The data used in this analysis is provided by <a href="https://www.yelp.com/dataset">Yelp Opendata</a>, last update on Jan 21, 2021.</p>
+<h2 id="Data-Source">Data Source<a class="anchor-link" href="#Data-Source">&#182;</a></h2><p>Firstly use Yelp Fusion API to pull data from Yelp for further analysis.</p>
+<p>The selecting criteria is the Chinese restaurants in New York City.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[90]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[192]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#Business Search Yelp &#39;https://api.yelp.com/v3/businesses/search&#39;</span>
-<span class="n">client_id</span> <span class="o">=</span> <span class="s1">&#39;By4LztDH6ULQMoOWW73Uag&#39;</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="s1">&#39;hC90EyLZwRlSqQGxIzbg_t8CAfz0aFyIovi270VIjCqEGHBx8xXyPGW4HUQoIh2ELaArE7Lw3zIM9aLkJQkuREJs5S4G1HtBx43eFCpvnP8IebL-uZk2CBKfFqxQYXYx&#39;</span>
-<span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;https://api.yelp.com/v3/businesses/search&#39;</span>
-<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;bearer </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">api_key</span>}
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">yelp_business_search</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">location</span> <span class="o">=</span> <span class="s1">&#39;NYC&#39;</span><span class="p">,</span> <span class="n">lim</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">term</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;https://api.yelp.com/v3/businesses/search&#39;</span><span class="p">):</span>
+    <span class="c1">#Business Search Yelp &#39;https://api.yelp.com/v3/businesses/search&#39;</span>
+    <span class="n">client_id</span> <span class="o">=</span> <span class="s1">&#39;By4LztDH6ULQMoOWW73Uag&#39;</span>
+    <span class="c1">#This is a private api key, please get your own api key by access yelp fusion api website.</span>
+    <span class="n">api_key</span> <span class="o">=</span> <span class="s1">&#39;hC90EyLZwRlSqQGxIzbg_t8CAfz0aFyIovi270VIjCqEGHBx8xXyPGW4HUQoIh2ELaArE7Lw3zIM9aLkJQkuREJs5S4G1HtBx43eFCpvnP8IebL-uZk2CBKfFqxQYXYx&#39;</span>
 
-<span class="c1">#Define the parameters</span>
-<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;term&#39;</span><span class="p">:</span><span class="s1">&#39;chinese,restaurants&#39;</span><span class="p">,</span>
-          <span class="s1">&#39;limit&#39;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span>
-          <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span>
-          <span class="s1">&#39;location&#39;</span><span class="p">:</span><span class="s1">&#39;NYC&#39;</span><span class="p">}</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;bearer </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">api_key</span>}
 
-<span class="c1">#Make a request to the yelp api</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="c1">#Define the parameters</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;term&#39;</span><span class="p">:</span> <span class="n">term</span><span class="p">,</span>
+              <span class="s1">&#39;limit&#39;</span><span class="p">:</span><span class="n">lim</span><span class="p">,</span>
+              <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="n">offset</span><span class="p">,</span>
+              <span class="s1">&#39;location&#39;</span><span class="p">:</span><span class="n">location</span><span class="p">,</span>
+              <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mi">40000</span><span class="p">}</span>
+
+    <span class="c1">#Make a request to the yelp api</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+    <span class="c1">#Convert json string to dictionary</span>
+    <span class="n">business_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">business_data</span><span class="p">[</span><span class="s1">&#39;businesses&#39;</span><span class="p">])</span>
 </pre></div>
 
      </div>
@@ -14089,16 +14097,21 @@ Prepared by <strong><em>Keqi Deng</em></strong></p>
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Here we select 250 top rating Chinese restaurants near New York City.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[91]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[193]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#Convert json string to dictionary</span>
-<span class="n">business_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">business_data</span><span class="p">[</span><span class="s1">&#39;businesses&#39;</span><span class="p">])</span>
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">yelp_business_search</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span><span class="n">yelp_business_search</span><span class="p">(</span><span class="n">i</span><span class="p">)])</span>
 </pre></div>
 
      </div>
@@ -14106,174 +14119,29 @@ Prepared by <strong><em>Keqi Deng</em></strong></p>
 </div>
 </div>
 
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[91]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>alias</th>
-      <th>name</th>
-      <th>image_url</th>
-      <th>is_closed</th>
-      <th>url</th>
-      <th>review_count</th>
-      <th>categories</th>
-      <th>rating</th>
-      <th>coordinates</th>
-      <th>transactions</th>
-      <th>price</th>
-      <th>location</th>
-      <th>phone</th>
-      <th>display_phone</th>
-      <th>distance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0CjK3esfpFcxIopebzjFxA</td>
-      <td>joes-shanghai-new-york-2</td>
-      <td>Joe's Shanghai</td>
-      <td>https://s3-media4.fl.yelpcdn.com/bphoto/KRvabB...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/joes-shanghai-new-yor...</td>
-      <td>6433</td>
-      <td>[{'alias': 'shanghainese', 'title': 'Shanghain...</td>
-      <td>4.0</td>
-      <td>{'latitude': 40.7156608, 'longitude': -73.9967...</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '46 Bowery St', 'address2': '', '...</td>
-      <td>+12122338888</td>
-      <td>(212) 233-8888</td>
-      <td>1153.948239</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>wfhMIiMh2A2psCGONOVSlg</td>
-      <td>han-dynasty-new-york</td>
-      <td>Han Dynasty</td>
-      <td>https://s3-media3.fl.yelpcdn.com/bphoto/G5jm9G...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/han-dynasty-new-york?...</td>
-      <td>1273</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}, {...</td>
-      <td>4.0</td>
-      <td>{'latitude': 40.732072, 'longitude': -73.988074}</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '90 3rd Ave', 'address2': '', 'ad...</td>
-      <td>+12123908685</td>
-      <td>(212) 390-8685</td>
-      <td>3006.833805</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0dDCDQz7DrKkSvu9h2hcQw</td>
-      <td>chow-house-new-york</td>
-      <td>Chow House</td>
-      <td>https://s3-media3.fl.yelpcdn.com/bphoto/kzeCls...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/chow-house-new-york?a...</td>
-      <td>455</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}, {...</td>
-      <td>4.5</td>
-      <td>{'latitude': 40.72915, 'longitude': -74.00072}</td>
-      <td>[delivery, pickup, restaurant_reservation]</td>
-      <td>$$</td>
-      <td>{'address1': '181 Bleecker St', 'address2': No...</td>
-      <td>+12128371021</td>
-      <td>(212) 837-1021</td>
-      <td>2692.440180</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>lynQoI3w_pzYfHGeuUU-Qg</td>
-      <td>shu-jiao-fu-zhou-cuisine-restaurant-new-york</td>
-      <td>Shu Jiao Fu Zhou Cuisine Restaurant</td>
-      <td>https://s3-media2.fl.yelpcdn.com/bphoto/EV10p_...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/shu-jiao-fu-zhou-cuis...</td>
-      <td>910</td>
-      <td>[{'alias': 'chinese', 'title': 'Chinese'}]</td>
-      <td>4.5</td>
-      <td>{'latitude': 40.7174109, 'longitude': -73.9920...</td>
-      <td>[delivery, pickup]</td>
-      <td>$</td>
-      <td>{'address1': '295 Grand St', 'address2': None,...</td>
-      <td>+12126252532</td>
-      <td>(212) 625-2532</td>
-      <td>1343.485119</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>xq0cX_DgxiJMXwhmEl9kUA</td>
-      <td>café-china-new-york-2</td>
-      <td>Café China</td>
-      <td>https://s3-media1.fl.yelpcdn.com/bphoto/UhHqxE...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/caf%C3%A9-china-new-y...</td>
-      <td>1693</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}]</td>
-      <td>4.0</td>
-      <td>{'latitude': 40.75157, 'longitude': -73.98584}</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '59 West 37th St', 'address2': No...</td>
-      <td>+12122132810</td>
-      <td>(212) 213-2810</td>
-      <td>5186.281754</td>
-    </tr>
-  </tbody>
-</table>
 </div>
-</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Dataset-Modification">Dataset Modification<a class="anchor-link" href="#Dataset-Modification">&#182;</a></h2><blockquote><p>Modify and prepare the datasets for further analysis and mapping.</p>
+</blockquote>
 
 </div>
-
-</div>
-
-</div>
-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[92]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[194]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">coordinates</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#modify the coordinate data</span>
+<span class="n">coordinates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">coordinates</span>
 <span class="n">lat</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">coordinates</span><span class="p">]</span>
 <span class="n">lon</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">coordinates</span><span class="p">]</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lat</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lon</span>
 <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;coordinates&#39;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">location</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">location</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;postal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;zip_code&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">location</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -14284,304 +14152,12 @@ Prepared by <strong><em>Keqi Deng</em></strong></p>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[93]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[93]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>alias</th>
-      <th>name</th>
-      <th>image_url</th>
-      <th>is_closed</th>
-      <th>url</th>
-      <th>review_count</th>
-      <th>categories</th>
-      <th>rating</th>
-      <th>transactions</th>
-      <th>price</th>
-      <th>location</th>
-      <th>phone</th>
-      <th>display_phone</th>
-      <th>distance</th>
-      <th>latitude</th>
-      <th>longitude</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0CjK3esfpFcxIopebzjFxA</td>
-      <td>joes-shanghai-new-york-2</td>
-      <td>Joe's Shanghai</td>
-      <td>https://s3-media4.fl.yelpcdn.com/bphoto/KRvabB...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/joes-shanghai-new-yor...</td>
-      <td>6433</td>
-      <td>[{'alias': 'shanghainese', 'title': 'Shanghain...</td>
-      <td>4.0</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '46 Bowery St', 'address2': '', '...</td>
-      <td>+12122338888</td>
-      <td>(212) 233-8888</td>
-      <td>1153.948239</td>
-      <td>40.715661</td>
-      <td>-73.996701</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>wfhMIiMh2A2psCGONOVSlg</td>
-      <td>han-dynasty-new-york</td>
-      <td>Han Dynasty</td>
-      <td>https://s3-media3.fl.yelpcdn.com/bphoto/G5jm9G...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/han-dynasty-new-york?...</td>
-      <td>1273</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}, {...</td>
-      <td>4.0</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '90 3rd Ave', 'address2': '', 'ad...</td>
-      <td>+12123908685</td>
-      <td>(212) 390-8685</td>
-      <td>3006.833805</td>
-      <td>40.732072</td>
-      <td>-73.988074</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0dDCDQz7DrKkSvu9h2hcQw</td>
-      <td>chow-house-new-york</td>
-      <td>Chow House</td>
-      <td>https://s3-media3.fl.yelpcdn.com/bphoto/kzeCls...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/chow-house-new-york?a...</td>
-      <td>455</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}, {...</td>
-      <td>4.5</td>
-      <td>[delivery, pickup, restaurant_reservation]</td>
-      <td>$$</td>
-      <td>{'address1': '181 Bleecker St', 'address2': No...</td>
-      <td>+12128371021</td>
-      <td>(212) 837-1021</td>
-      <td>2692.440180</td>
-      <td>40.729150</td>
-      <td>-74.000720</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>lynQoI3w_pzYfHGeuUU-Qg</td>
-      <td>shu-jiao-fu-zhou-cuisine-restaurant-new-york</td>
-      <td>Shu Jiao Fu Zhou Cuisine Restaurant</td>
-      <td>https://s3-media2.fl.yelpcdn.com/bphoto/EV10p_...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/shu-jiao-fu-zhou-cuis...</td>
-      <td>910</td>
-      <td>[{'alias': 'chinese', 'title': 'Chinese'}]</td>
-      <td>4.5</td>
-      <td>[delivery, pickup]</td>
-      <td>$</td>
-      <td>{'address1': '295 Grand St', 'address2': None,...</td>
-      <td>+12126252532</td>
-      <td>(212) 625-2532</td>
-      <td>1343.485119</td>
-      <td>40.717411</td>
-      <td>-73.992088</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>xq0cX_DgxiJMXwhmEl9kUA</td>
-      <td>café-china-new-york-2</td>
-      <td>Café China</td>
-      <td>https://s3-media1.fl.yelpcdn.com/bphoto/UhHqxE...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/caf%C3%A9-china-new-y...</td>
-      <td>1693</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}]</td>
-      <td>4.0</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '59 West 37th St', 'address2': No...</td>
-      <td>+12122132810</td>
-      <td>(212) 213-2810</td>
-      <td>5186.281754</td>
-      <td>40.751570</td>
-      <td>-73.985840</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[94]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">yelp_df</span> <span class="o">=</span> <span class="n">df</span>
-<span class="n">yelp_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[94]:</div>
-
-
-
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>alias</th>
-      <th>name</th>
-      <th>image_url</th>
-      <th>is_closed</th>
-      <th>url</th>
-      <th>review_count</th>
-      <th>categories</th>
-      <th>rating</th>
-      <th>transactions</th>
-      <th>price</th>
-      <th>location</th>
-      <th>phone</th>
-      <th>display_phone</th>
-      <th>distance</th>
-      <th>latitude</th>
-      <th>longitude</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0CjK3esfpFcxIopebzjFxA</td>
-      <td>joes-shanghai-new-york-2</td>
-      <td>Joe's Shanghai</td>
-      <td>https://s3-media4.fl.yelpcdn.com/bphoto/KRvabB...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/joes-shanghai-new-yor...</td>
-      <td>6433</td>
-      <td>[{'alias': 'shanghainese', 'title': 'Shanghain...</td>
-      <td>4.0</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '46 Bowery St', 'address2': '', '...</td>
-      <td>+12122338888</td>
-      <td>(212) 233-8888</td>
-      <td>1153.948239</td>
-      <td>40.715661</td>
-      <td>-73.996701</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>wfhMIiMh2A2psCGONOVSlg</td>
-      <td>han-dynasty-new-york</td>
-      <td>Han Dynasty</td>
-      <td>https://s3-media3.fl.yelpcdn.com/bphoto/G5jm9G...</td>
-      <td>False</td>
-      <td>https://www.yelp.com/biz/han-dynasty-new-york?...</td>
-      <td>1273</td>
-      <td>[{'alias': 'szechuan', 'title': 'Szechuan'}, {...</td>
-      <td>4.0</td>
-      <td>[pickup, delivery]</td>
-      <td>$$</td>
-      <td>{'address1': '90 3rd Ave', 'address2': '', 'ad...</td>
-      <td>+12123908685</td>
-      <td>(212) 390-8685</td>
-      <td>3006.833805</td>
-      <td>40.732072</td>
-      <td>-73.988074</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[95]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[195]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Dataset information</span>
-<span class="n">yelp_df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="n">yelp_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">yelp_df</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 
      </div>
@@ -14601,30 +14177,25 @@ Prepared by <strong><em>Keqi Deng</em></strong></p>
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-RangeIndex: 50 entries, 0 to 49
-Data columns (total 17 columns):
- #   Column         Non-Null Count  Dtype  
----  ------         --------------  -----  
- 0   id             50 non-null     object 
- 1   alias          50 non-null     object 
- 2   name           50 non-null     object 
- 3   image_url      50 non-null     object 
- 4   is_closed      50 non-null     bool   
- 5   url            50 non-null     object 
- 6   review_count   50 non-null     int64  
- 7   categories     50 non-null     object 
- 8   rating         50 non-null     float64
- 9   transactions   50 non-null     object 
- 10  price          44 non-null     object 
- 11  location       50 non-null     object 
- 12  phone          50 non-null     object 
- 13  display_phone  50 non-null     object 
- 14  distance       50 non-null     float64
- 15  latitude       50 non-null     float64
- 16  longitude      50 non-null     float64
-dtypes: bool(1), float64(4), int64(1), object(11)
-memory usage: 6.4+ KB
+<pre>   index                      id                         alias  \
+0      0  GYO8lvStXGZAfFDRlOxQ1Q  hotel-50-bowery-nyc-new-york   
+
+                  name                                          image_url  \
+0  Hotel 50 Bowery NYC  https://s3-media3.fl.yelpcdn.com/bphoto/opMnr9...   
+
+   is_closed                                                url  review_count  \
+0      False  https://www.yelp.com/biz/hotel-50-bowery-nyc-n...           200   
+
+                                          categories  rating  ... price  \
+0  [{&#39;alias&#39;: &#39;hotels&#39;, &#39;title&#39;: &#39;Hotels&#39;}, {&#39;ali...     4.5  ...    $$   
+
+                                            location         phone  \
+0  {&#39;address1&#39;: &#39;50 Bowery&#39;, &#39;address2&#39;: None, &#39;a...  +12125088000   
+
+    display_phone     distance  latitude  longitude      city state postal  
+0  (212) 508-8000  1202.705247  40.71599  -73.99683  New York    NY  10013  
+
+[1 rows x 21 columns]
 </pre>
 </div>
 </div>
@@ -14636,7 +14207,7 @@ memory usage: 6.4+ KB
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[96]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[196]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Dataset length:</span>
@@ -14656,13 +14227,13 @@ memory usage: 6.4+ KB
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[96]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[196]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>50</pre>
+<pre>200</pre>
 </div>
 
 </div>
@@ -14671,21 +14242,13 @@ memory usage: 6.4+ KB
 
 </div>
 
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Dataset-Modification">Dataset Modification<a class="anchor-link" href="#Dataset-Modification">&#182;</a></h2><blockquote><p>Modify the Dataset to Find Restaurants Labeled <em>Chinese</em>, then plot the location of Chinese restaurants on the map.</p>
-</blockquote>
-
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[97]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[196]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">lat_mean</span> <span class="o">=</span> <span class="n">yelp_df</span><span class="o">.</span><span class="n">latitude</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="n">lon_mean</span> <span class="o">=</span> <span class="n">yelp_df</span><span class="o">.</span><span class="n">longitude</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span> 
 </pre></div>
 
      </div>
@@ -14696,13 +14259,18 @@ memory usage: 6.4+ KB
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[98]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[197]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># import plotly for plotting interactive map</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#locate the middle of the map by calculate the mean of the latitude and longitude</span>
+<span class="n">lat_mean</span> <span class="o">=</span> <span class="n">yelp_df</span><span class="o">.</span><span class="n">latitude</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">lon_mean</span> <span class="o">=</span> <span class="n">yelp_df</span><span class="o">.</span><span class="n">longitude</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="c1"># import plotly for plotting interactive map</span>
 <span class="n">hov_label</span> <span class="o">=</span> <span class="n">yelp_df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
 <span class="c1"># use mapbox token</span>
+<span class="c1">#this is a private token key, please access mapbox for your own token</span>
 <span class="n">tkn</span> <span class="o">=</span> <span class="s1">&#39;pk.eyJ1IjoicGF0cmlja2RkZCIsImEiOiJja3R5dGluOWEzNzE3MzFvMzR0MjRlZWVtIn0.ezHYtubmTTHs1z2n11c7yQ&#39;</span>
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">([</span><span class="n">Scattermapbox</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">yelp_df</span><span class="o">.</span><span class="n">latitude</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
@@ -14741,9 +14309,9 @@ memory usage: 6.4+ KB
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output " data-mime-type="text/html">
-<div>                            <div id="560aa430-6c5a-4ccb-bf02-2d69db01f284" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("560aa430-6c5a-4ccb-bf02-2d69db01f284")) {                    Plotly.newPlot(                        "560aa430-6c5a-4ccb-bf02-2d69db01f284",                        [{"lat":[40.7156608,40.732072,40.72915,40.7174109,40.75157,40.7293403,40.76292,40.72877,40.6911319610036,40.71441,40.71785,40.7334863190479,40.72925,40.714167,40.72911,40.7422762672197,40.718271,40.71442,40.71735,40.72939,40.731338,40.73297,40.7409694,40.7190148,40.73138,40.75809,40.71261,40.7259,40.72674,40.68807,40.7187,40.7137,40.681442,40.72713,40.74014,40.7134488,40.7406999,40.74304,40.7582902125633,40.76015,40.7201045,40.7142,40.74744,40.75935,40.71512,40.72412482724,40.72929,40.693868137768895,40.7140555,40.742827],"lon":[-73.9967012,-73.988074,-74.00072,-73.9920876,-73.98584,-73.9866071,-73.976546,-73.98873,-73.9825977757573,-73.99902,-73.9968,-73.9998929006093,-73.9886,-73.998803,-73.98858,-74.0048000961542,-73.985209,-73.960441,-73.99457,-73.9889199,-73.990145,-73.98829,-73.9934031,-73.9968228,-74.00319,-73.98026,-73.96077,-73.98986,-73.98722,-73.98199,-73.99031,-73.99598,-73.977241,-73.98542,-73.99178,-73.9513445,-74.00436,-73.99619,-73.9925113993899,-73.9893699,-74.0087721,-73.99787,-73.97728,-73.99175,-73.95097,-73.9828906263924,-73.99882,-73.9634565145772,-73.9988387116394,-73.953575],"mode":"markers","text":["Joe's Shanghai","Han Dynasty","Chow House","Shu Jiao Fu Zhou Cuisine Restaurant","Caf\u00e9 China","Uluh","Blue Willow \u591c\u6765\u6e58","886","Han Dynasty","Shanghai 21","Lady Chow's Kitchen","Hao Noodle - West Village","Cheli","Noodle Village","Szechuan Mountain House","Buddakan","3 Times","Birds of a Feather","Wah Fung No 1","The Bao","Tim Ho Wan","Silky Kitchen","Jue Lan Club","Nyonya","Clay Pot - West Village","Mr. Sun","Lazy Siu's","Dim Sum Palace","Spicy Moon East Village","Bites of Xi'an","Congee Village","Hwa Yuan","5ive Spice","M\u00e1L\u00e0 Project","Baodega","hanon","Hao Noodle Chelsea","Season Taste","China Xiang \u4e2d\u56fd\u6e58","Dim Sum Palace","Mr Chow","Tasty Hand-Pulled Noodles","Little Alley","Tim Ho Wan - Hell's Kitchen","Kings Co Imperial","Tuome","Tipsy Shanghai","DunHuang Miss Noodles","Wok Wok Southeast Asian Kitchen","Hupo\u7425\u73c0"],"type":"scattermapbox"}],                        {"autosize":true,"hovermode":"closest","mapbox":{"accesstoken":"pk.eyJ1IjoicGF0cmlja2RkZCIsImEiOiJja3R5dGluOWEzNzE3MzFvMzR0MjRlZWVtIn0.ezHYtubmTTHs1z2n11c7yQ","bearing":0,"center":{"lat":40.72684419249687,"lon":-73.9874844044904},"pitch":0,"style":"light","zoom":10},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}},"title":{"text":"Chinese Restaurants on Yelp"}},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="2fdaf207-b775-4851-98de-3f685c9b8783" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("2fdaf207-b775-4851-98de-3f685c9b8783")) {                    Plotly.newPlot(                        "2fdaf207-b775-4851-98de-3f685c9b8783",                        [{"lat":[40.71599,40.762227,40.7226547813163,40.7254433174655,40.641174920131,40.738628,40.7186,40.713914,40.75605,40.747685,40.74094,40.70274718768062,40.74763,40.738437,40.612703,40.74029833,40.70586978591561,40.7033063330116,40.7183878,40.729330068469,40.70873,40.722237,40.72664,40.7542705,40.710658,40.70208865020039,40.719135,40.746042,40.715082,40.728,40.71931,40.702834,40.70717,40.7456218469168,40.7374217,40.7043756,40.7292063820076,40.71599,40.7275,40.72147,40.71605,40.72884,40.7297097529882,40.71769,40.71244,40.71876,40.71798,40.72249,40.758417,40.71827,40.71769,40.71244,40.71798,40.72249,40.758417,40.71827,40.721988,40.71436,40.7063449,40.70701,40.743292,40.7674213694566,40.7200099,40.713838,40.72412482724,40.733138,40.72734,40.72884,40.70707,40.714145,40.70788,40.7174109,40.70837,40.7263350655,40.72474046278671,40.7289298,40.70184,40.7357,40.73158,40.7327,40.71843,40.715608,40.72183,40.77878,40.71958,40.725639,40.736032,40.69869,40.72244,40.7205157,40.718598,40.7181606872639,40.707492,40.71526,40.71434,40.732704,40.6818,40.72238,40.696432423661,40.72549,40.74522,40.71506,40.7027,40.7300047976758,40.73372,40.69035,40.69023,40.72551,40.7267949,40.70766,40.6915156530047,40.7345163811398,40.726769311104,40.7190867,40.7440395,40.71944096840517,40.71534,40.72549,40.727947,40.71069,40.719878,40.719101,40.69979,40.6845433545275,40.71694,40.7162705535921,40.7244923,40.7143299,40.7303076612002,40.732484,40.73304,40.722821,40.7100847891067,40.73818,40.703595,40.7157,40.724811,40.726373,40.71887,40.72044,40.7197229753629,40.73343,40.712708,40.739691,40.6901481293837,40.727157,40.7185899,40.7228079872831,40.735088,40.727574,40.7197229753629,40.73343,40.712708,40.739691,40.6901481293837,40.727157,40.7185899,40.7228079872831,40.72186,40.71844,40.72346,40.72666,40.689436,40.7238251309896,40.723543,40.7383,40.715621,40.701729,40.714155,40.73844,40.72184,40.72639,40.714058,40.72063,40.7117670177852,40.72768,40.7198301,40.71417,40.71915,40.70347018353067,40.72583,40.689722,40.7176139,40.732765,40.71798,40.72615,40.747247,40.72043,40.73138,40.72369,40.7184736,40.73778,40.7263263267119,40.73293764919451,40.7416907417333,40.7122932799856,40.72866,40.68606512542637,40.7112749,40.72053],"lon":[-73.99683,-73.9856178382696,-73.9592818829542,-73.99978085581971,-74.0036972986019,-73.98606,-73.96212,-74.009647,-73.97103,-73.987361,-73.9937,-73.99343490196397,-73.9868599,-73.985686,-73.943859,-74.00562667,-74.0019071664742,-73.9916549604523,-74.0015522,-74.0038400073579,-74.00574,-73.9875259,-73.99202,-73.9915885,-73.958872,-73.9894541379247,-73.991758,-73.983454,-73.997342,-74.0001497,-73.99689,-73.9905026,-74.00192,-74.0095717240814,-74.043067,-74.0105259,-73.9844848239426,-73.99683,-73.9838,-73.9847,-73.99169,-73.98965,-73.9891492245369,-74.00144,-73.994,-74.00073,-73.99042,-73.98336,-73.983301,-73.98806,-74.00144,-73.994,-73.99042,-73.98336,-73.983301,-73.98806,-73.992466,-73.99183,-74.0076944,-74.00356,-73.991097,-73.9810554368179,-73.993839,-73.98976,-73.9828906263924,-73.998044,-74.00001,-74.00488,-74.00244,-73.965322,-74.00194,-73.9920876,-74.00563,-73.9920476876,-73.99144358343166,-73.980601,-73.9958147,-74.00616,-74.00332,-73.99766,-73.98909,-73.998949,-73.98719,-73.97459,-73.99484,-73.991714,-73.994159,-73.99257,-74.00482,-73.9981652,-73.985186,-73.9976975651144,-74.002571,-73.99883,-73.99822,-74.004317,-74.00024,-73.98403,-73.9890010861378,-73.98803,-73.97827,-73.9916,-73.99314,-74.0006073834151,-74.00513,-73.99531,-73.99634,-73.98838,-73.9892815,-74.00205,-73.9846554,-73.9983369619683,-73.9847712789363,-73.9923073,-73.9881258,-73.9850998321304,-73.9914,-74.00489,-74.001393,-73.96559,-73.989063,-73.9938676,-73.99203,-73.9837775425761,-74.0057,-74.0072225927912,-73.9944022,-73.95604,-74.0068030357639,-74.003915,-74.00734,-74.00602,-73.9625787734985,-73.98866,-73.987903,-73.99663,-73.992832,-73.986557,-73.98701,-73.98412,-73.98919771717,-74.00617,-74.015919,-73.988428,-73.9935445412993,-73.983721,-73.9893704,-73.9833535829059,-73.9931414,-73.988623,-73.98919771717,-74.00617,-74.015919,-73.988428,-73.9935445412993,-73.983721,-73.9893704,-73.9833535829059,-74.00382,-73.98981,-73.9963118,-73.9773,-73.9723809,-74.0032896944427,-74.003199,-74.00932,-73.964757,-73.995882,-73.987064,-73.98825,-73.987714,-73.99236,-73.987381,-73.98539,-73.9646924963509,-73.98502,-74.0000708,-73.9937,-74.00994,-74.012096,-73.99299,-73.971003,-73.990234,-73.997284,-73.99042,-74.00216,-73.9843,-73.98894,-73.98902,-73.98489,-73.9600178,-74.00197,-74.0034471165676,-73.99758608256435,-73.9872074872255,-73.9628687873483,-74.00472,-73.99388911165558,-74.0068449,-73.95741],"mode":"markers","text":["Hotel 50 Bowery NYC","Toloache 50","50 Kent Ave","UNO de 50","Yuan Bao 50 INC","50 Gramarcy Park N Owners","50 North 5th Apartments","Tribeca House - 50 Murray","Fifty Hotel & Suites, by Affinia","Spot Karaoke & Lounge","Sushi by Bou Flatiron","Juliana's","Karaoke City","Maialino","Good Fun Zone","Helen's","The Greens","Cecconi's Dumbo","Au Cheval","Emily - West Village","Kidville","Katz's Delicatessen","Sushi on Jones","Mission Escape Games","Traif","Westville Dumbo","L\u0112NA","Sushi By Bo\u016b - NoMad","Xi'an Famous Foods","Carbone","Hometown Hotpot & BBQ","Evil Twin Brewing - Dumbo Taproom","Fishmarket Restaurant","Golf Club at Chelsea Piers","Mission 50 Coworking & Meeting Space","The Cauldron NYC","Momofuku Noodle Bar - East Village","The Crown","Thursday Kitchen","Subject","King Dumplings","McSorleys Old Ale House","Angel's Share","Live Axe","Golden Diner","Kimi iPhone Repair Cases & Accessories","Dudley's","The Hairy Lemon Pub","Sushi Lab","The Grand Delancey","Live Axe","Golden Diner","Dudley's","The Hairy Lemon Pub","Sushi Lab","The Grand Delancey","Freemans","Kiki\u2019s Grill & Rotisserie","Crown Shy","Cobble & Co.","Hole in The Wall - Flatiron","Marea","Sel Rrose","Charles Hanson's 169 Soul Jazz Oyster Bar","Tuome","Mace","Madame X","Ollie","Fresh Salt","Sunday in Brooklyn","Suteishi","Shu Jiao Fu Zhou Cuisine Restaurant","Hole In The Wall","The Wren","Momofuku Ko","Raclette","Harriet's Rooftop","White Horse Tavern","John's of Bleecker Street","Am\u00e9lie","Hotel Chantelle","Tonii\u2019s Fresh Rice Noodle","Dirty French","Landmark on the Park","Casa Bocado","Bar Primi","Manhattan Penthouse","Henry's End","Jimmy","Compagnie des Vins Surnaturels","Bills Flowers and Other Things","Puglia Ristorante","IL Brigante","Basement","Apotheke","Buvette","Lucali","Il Posto Accanto","Pilot","MONO+MONO","Blue Haven East","Bar Belly","Gran Electrica","Minetta Tavern","L'Artusi","Elsa","Lillo Cucina Italiana","Soogil","Nai Tapas","Jeremy's Ale House- South Street Seaport","Kimoto Rooftop","Alta","Ladybird","Gem","230 Fifth Rooftop Bar","The Burgary","Scarr's Pizza","Altro Paradiso","Miss Lily's","Diner","Contra","Con Artist Collective","Noodle Pudding","Taiki","Atera","Tribeca's Kitchen","Emilio's Ballato","St. Anselm","The Clam","L'Accolade","JeJu Noodle Bar","Gitano Garden of Love","Velvet Brooklyn","Craft","Vodega","Nakaji","Slainte Bar & Lounge","Upstate Craft Beer & Oyster Bar","Nurse Bettie","Koneko","Wildair","Employees Only","L'Appart","Cosme","Boutros","Please Don't Tell","The DL","Root & Bone","Corkbuzz Wine Studio","Mighty Quinn's Barbeque","Wildair","Employees Only","L'Appart","Cosme","Boutros","Please Don't Tell","The DL","Root & Bone","MAMO Restaurant","Excuse My French","La Pecora Bianca","Virginia's","Miss Ada","Pera Soho","Aurora Soho","The Jane Ballroom","Aurora","1 Hotel Brooklyn Bridge","Eastwood","Gramercy Tavern","Tre","Bohemian Restaurant","Bo Hai Dumpling Town","Balvanera","Butler","Goodnight Sonny","NOMO Kitchen","Fong On","American Cut Steakhouse Tribeca","Ampia Rooftop","Il Buco Alimentari & Vineria","Evelina","Las' Lap","Wicked Jane","Sticky Rice","Raoul's Restaurant","Tap Haus 33","Trapizzino","The Ainsworth - East Village","Two Boots East Village","Sweetwater Restaurant","Don Angie","Ciccio","Loring Place","Eleven Madison Park","Rabbithole Restaurant","Houston Hall","June","The Bar Room","Bathhouse"],"type":"scattermapbox"}],                        {"autosize":true,"hovermode":"closest","mapbox":{"accesstoken":"pk.eyJ1IjoicGF0cmlja2RkZCIsImEiOiJja3R5dGluOWEzNzE3MzFvMzR0MjRlZWVtIn0.ezHYtubmTTHs1z2n11c7yQ","bearing":0,"center":{"lat":40.72078472850592,"lon":-73.9919760056893},"pitch":0,"style":"light","zoom":10},"template":{"data":{"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"#E5ECF6","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","gridwidth":2,"linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"bgcolor":"#E5ECF6","caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","zerolinewidth":2}}},"title":{"text":"Chinese Restaurants on Yelp"}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('560aa430-6c5a-4ccb-bf02-2d69db01f284');
+var gd = document.getElementById('2fdaf207-b775-4851-98de-3f685c9b8783');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -14777,7 +14345,7 @@ if (outputEl) {{
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[98]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[197]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython2"><pre><span></span> 
